@@ -5,10 +5,10 @@ FROM ccr.ccs.tencentyun.com/ags-image/sandbox-code:latest
 
 USER root
 
-# 系统库：P3M 二进制包运行时需要；编译工具留作兜底（个别包没有二进制时从源码编译）。
+# 只装 P3M 二进制包运行时需要的系统库（nloptr 链接 libnlopt），不装编译工具链：
+# r-base-dev/gfortran/cmake 有几百 MB，新增层越小，跨境推送越快。
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-      r-base-dev gfortran cmake libnlopt-dev libcurl4-openssl-dev libssl-dev libxml2-dev \
+ && apt-get install -y --no-install-recommends libnlopt0 \
  && rm -rf /var/lib/apt/lists/*
 
 # Posit Package Manager 为 Debian 13 + R 4.5 提供预编译二进制包，免去 lme4/RcppEigen 等的漫长编译。

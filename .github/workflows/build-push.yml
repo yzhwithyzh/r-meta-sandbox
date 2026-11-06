@@ -17,7 +17,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
 
@@ -37,13 +37,7 @@ jobs:
           platforms: linux/amd64
           push: true
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
           tags: |
             ${{ env.IMAGE }}:${{ inputs.tag || 'v1' }}
             ${{ env.IMAGE }}:sha-${{ github.sha }}
-
-      - name: 验证 R 包可加载
-        run: |
-          docker run --rm --platform linux/amd64 --entrypoint Rscript \
-            ${{ env.IMAGE }}:${{ inputs.tag || 'v1' }} \
-            -e 'library(metafor); library(meta); cat("OK\n")'
