@@ -36,6 +36,8 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             ${{ env.IMAGE }}:${{ inputs.tag || 'v1' }}
             ${{ env.IMAGE }}:sha-${{ github.sha }}
